@@ -1,0 +1,7 @@
+{
+  "name": "spendlessout",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
