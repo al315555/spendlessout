@@ -8,11 +8,27 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FolderPage implements OnInit {
   public folder: string;
+  public folderId: string;
 
   constructor(private activatedRoute: ActivatedRoute) { }
 
+  public appPagesMapping = [
+    { title: 'Mis datos', id: 'datos' },
+    { title: 'Itinerarios propios', id: 'itinerariospropios' },
+    { title: 'Generar itinerario', id: 'generar' },
+    { title: 'Itinerarios', id: 'itinerarios'},
+    {title: 'Cerrar sesión', id: 'logout' },
+    {title: 'Iniciar sesión', id: 'auth'  },
+    {title: 'Registrarse', id: 'register'  },
+    {title: 'Bienvenido', id: 'Bienvenido'   }
+  ];
+
+  logForm(){}
+
   ngOnInit() {
-    this.folder = this.activatedRoute.snapshot.paramMap.get('id');
+    const idFromParamPage = this.activatedRoute.snapshot.paramMap.get('id');
+    this.folder = this.appPagesMapping.find(pageMappingElement => pageMappingElement.id == idFromParamPage).title;
+    this.folderId = idFromParamPage;
   }
 
 }

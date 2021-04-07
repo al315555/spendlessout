@@ -14,8 +14,14 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong class="capitalize">{{ folder }}</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <container-element [ngSwitch]="folderId">
+    <app-registercomponent *ngSwitchCase="'register'"></app-registercomponent>
+    <app-authcomponent *ngSwitchCase="'auth'"></app-authcomponent>
+    <app-misdatos *ngSwitchCase="'datos'"></app-misdatos>
+    <app-itinerarios *ngSwitchCase="'itinerarios'"></app-itinerarios>
+    <app-itinerariospropios *ngSwitchCase="'itinerariospropios'"></app-itinerariospropios>
+    <app-generaritinerario *ngSwitchCase="'generar'"></app-generaritinerario>
+  </container-element>
+
+
 </ion-content>

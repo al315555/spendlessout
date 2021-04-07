@@ -1,0 +1,37 @@
+<ion-card>
+  <ion-card-header>
+    <!--<ion-card-title>Inicie sesión desde aquí...</ion-card-title>
+  -->
+  </ion-card-header>
+
+  <ion-card-content class="ion-align-items-center">
+    <form (ngSubmit)="logFormSubmit()">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item class="ion-padding" >
+              <ion-label position="floating">Email</ion-label>
+              <ion-input type="email" required [(ngModel)]="usuarioToLogIn.email" name="email"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item class="ion-padding" >
+              <ion-label position="floating">Contraseña</ion-label>
+              <ion-input type="password" required [(ngModel)]="usuarioToLogIn.password" name="password"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col>
+            <ion-button color="primary" type="submit">Iniciar sesión</ion-button>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-card-content>
+</ion-card>
+

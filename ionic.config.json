@@ -1,7 +1,14 @@
 {
   "name": "spendlessout",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
-  "type": "angular"
+  "type": "angular",
+  "proxies": [
+    {
+      "path": "/apis",
+      "proxyUrl": "http://localhost:8008/server/api/v1"
+    }
+  ]
 }
