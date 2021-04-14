@@ -1,6 +1,4 @@
-import {Time} from "@angular/common";
-
-export class AuthToken{
+export class AuthToken extends Object{
   token: string;
   timeIsValid: number;
 }

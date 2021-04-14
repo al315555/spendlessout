@@ -15,6 +15,7 @@ import {ItinerariosComponent} from "./itinerarios/itinerarios.component";
 import {ItinerariospropiosComponent} from "./itinerariospropios/itinerariospropios.component";
 import {MisdatosComponent} from "./misdatos/misdatos.component";
 import {HttpClientModule} from "@angular/common/http";
+import {AES256} from "@ionic-native/aes-256/ngx";
 
 
 @NgModule({
@@ -23,8 +24,10 @@ import {HttpClientModule} from "@angular/common/http";
     FormsModule,
     IonicModule,
     FolderPageRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+
   ],
+  providers: [AES256],
   declarations: [FolderPage,
     RegistercomponentComponent,
     AuthcomponentComponent,

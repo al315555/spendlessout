@@ -1,6 +1,6 @@
 {
   "/apis/*": {
-    "target": "http://localhost:8008/server/api/v1",
+    "target": "https://spendlessoutapi.herokuapp.com/server/api/v1",
     "changeOrigin": true,
     "secure": false,
     "pathRewrite": {"^/apis" : ""}

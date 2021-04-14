@@ -21,6 +21,27 @@
     <app-itinerarios *ngSwitchCase="'itinerarios'"></app-itinerarios>
     <app-itinerariospropios *ngSwitchCase="'itinerariospropios'"></app-itinerariospropios>
     <app-generaritinerario *ngSwitchCase="'generar'"></app-generaritinerario>
+    <div *ngSwitchCase="'logout'">
+      <ion-card>
+        <ion-card-header>
+           ¿Desea cerrar sesión en el dispositivo?
+          <ion-icon name="exit" class="x3"></ion-icon>
+        </ion-card-header>
+        <ion-card-content class="ion-align-items-center">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-button color="danger" (click)="service.logout();">Si, cerrar la sesión</ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button (click)="service.cancelarLogout();" >No, volver atrás y cancelar</ion-button>
+              </ion-col>
+              <ion-col></ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </div>
   </container-element>
 
 

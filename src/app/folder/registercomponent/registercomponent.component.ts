@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../../auth.service";
+import {UserData} from "../bos/UserData";
 
 @Component({
   selector: 'app-registercomponent',
@@ -8,11 +9,14 @@ import {AuthService} from "../../auth.service";
 })
 export class RegistercomponentComponent implements OnInit {
 
-  constructor(private service: AuthService) { }
+  public usuarioCreatedToLogIn = new UserData();
+
+  constructor(public service: AuthService) { }
 
   ngOnInit() {}
 
   saveDataFormSubmit(){
-
+    this.usuarioCreatedToLogIn.timeStampCreacion = new Date().getTime();
+    this.service.saveDataRegisterService(this.usuarioCreatedToLogIn);
   }
 }

@@ -1,6 +1,4 @@
-import {Time} from "@angular/common";
-
-export class UserData{
+export class UserData extends Object{
 
   id: number;
 
@@ -15,5 +13,7 @@ export class UserData{
   password: string;
 
   passwordConfirmation: string;
+
+  passwordChanged: boolean;
 
 }

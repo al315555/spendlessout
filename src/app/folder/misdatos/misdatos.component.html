@@ -1,4 +1,4 @@
-<ion-card *ngIf="(service.isLogged)">
+<ion-card *ngIf="service.isLogged">
   <ion-card-header>
     <!--<ion-card-title>Inicie sesión desde aquí...</ion-card-title>
   -->
@@ -11,7 +11,7 @@
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Email</ion-label>
-              <ion-input type="email" required [(ngModel)]="service.usuarioToLogIn.email" name="email"></ion-input>
+              <ion-input type="email" required [ngModel]="service.usuarioToLogIn.email" name="email"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -19,7 +19,7 @@
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Nombre</ion-label>
-              <ion-input type="text" required [(ngModel)]="service.usuarioToLogIn.nombre" name="nombre"></ion-input>
+              <ion-input type="text" required [ngModel]="service.usuarioToLogIn.nombre" name="nombre"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -27,7 +27,7 @@
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Apellidos</ion-label>
-              <ion-input type="text" required [(ngModel)]="service.usuarioToLogIn.apellidos"
+              <ion-input type="text" required [ngModel]="service.usuarioToLogIn.apellidos"
                          name="apellidos"></ion-input>
             </ion-item>
           </ion-col>
@@ -44,25 +44,25 @@
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Cambiar contraseña</ion-label>
-              <ion-checkbox color="primary" [(ngModel)]="cambiarPass" name="cambiarPass"></ion-checkbox>
+              <ion-checkbox color="primary" [ngModel]="service.usuarioToLogIn.passwordChanged" name="cambiarPass"></ion-checkbox>
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="(cambiarPass)">
+        <ion-row *ngIf="(service.usuarioToLogIn.passwordChanged)">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Contraseña</ion-label>
               <ion-input type="password" required
-                         [(ngModel)]="service.usuarioToLogIn.password" name="password"></ion-input>
+                         [ngModel]="service.usuarioToLogIn.password" name="password"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="(cambiarPass)">
+        <ion-row *ngIf="(service.usuarioToLogIn.passwordChanged)">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Confirmar contraseña</ion-label>
               <ion-input type="password" required
-                         [(ngModel)]="service.usuarioToLogIn.passwordConfirmation"
+                         [ngModel]="service.usuarioToLogIn.passwordConfirmation"
                          name="passwordConfirmation"></ion-input>
             </ion-item>
           </ion-col>

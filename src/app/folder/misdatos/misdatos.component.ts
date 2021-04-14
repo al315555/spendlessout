@@ -8,16 +8,11 @@ import {AuthService} from "../../auth.service";
 })
 export class MisdatosComponent implements OnInit {
 
-  cambiarPass: boolean;
+  constructor(public service: AuthService) { }
 
-  constructor(private service: AuthService) { }
-
-  ngOnInit() {this.cambiarPass = false;}
+  ngOnInit() {}
 
   formatDate(dateMilliseconds: number): string{
-    console.log(new Date().getTime());
-    console.log(dateMilliseconds);
-
     const millisecsDiffer = new Date().getTime() - dateMilliseconds;
     const secsDiffer = millisecsDiffer / 1000;
     const minsDiffer = secsDiffer / 60;
@@ -40,6 +35,6 @@ export class MisdatosComponent implements OnInit {
   }
 
   saveDataFormSubmit(){
-
+    this.service.saveOwnData();
   }
 }
