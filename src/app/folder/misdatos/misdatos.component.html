@@ -11,23 +11,23 @@
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Email</ion-label>
-              <ion-input type="email" required [ngModel]="service.usuarioToLogIn.email" name="email"></ion-input>
+              <ion-input type="email" disabled required [(ngModel)]="service.usuarioToLogIn.email" name="email"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row [formGroup]="dataformGroup">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Nombre</ion-label>
-              <ion-input type="text" required [ngModel]="service.usuarioToLogIn.nombre" name="nombre"></ion-input>
+              <ion-input type="text" formControlName="nombre" required [(ngModel)]="service.usuarioToLogIn.nombre" name="nombre"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row [formGroup]="dataformGroup">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Apellidos</ion-label>
-              <ion-input type="text" required [ngModel]="service.usuarioToLogIn.apellidos"
+              <ion-input type="text" formControlName="apellidos" required [(ngModel)]="service.usuarioToLogIn.apellidos"
                          name="apellidos"></ion-input>
             </ion-item>
           </ion-col>
@@ -44,33 +44,44 @@
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Cambiar contraseña</ion-label>
-              <ion-checkbox color="primary" [ngModel]="service.usuarioToLogIn.passwordChanged" name="cambiarPass"></ion-checkbox>
+              <ion-checkbox color="primary" [(ngModel)]="checkboxpassvalue" (ionChange)="changeCheckBox($event)" name="cambiarPass"></ion-checkbox>
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="(service.usuarioToLogIn.passwordChanged)">
+        <ion-row [formGroup]="passformGroup"  *ngIf="(service.usuarioToLogIn.passwordChanged)">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Contraseña</ion-label>
-              <ion-input type="password" required
-                         [ngModel]="service.usuarioToLogIn.password" name="password"></ion-input>
+              <ion-input type="password" required formControlName="password"
+                        [(ngModel)]="service.usuarioToLogIn.password" name="password"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="(service.usuarioToLogIn.passwordChanged)">
+        <ion-row [formGroup]="passformGroup"  *ngIf="(service.usuarioToLogIn.passwordChanged)">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="stacked">Confirmar contraseña</ion-label>
-              <ion-input type="password" required
-                         [ngModel]="service.usuarioToLogIn.passwordConfirmation"
+              <ion-input type="password" required formControlName="passwordConfirmation"
+                        [(ngModel)]="service.usuarioToLogIn.passwordConfirmation"
                          name="passwordConfirmation"></ion-input>
             </ion-item>
+            <ion-item class="ion-padding" *ngIf="passformGroup.hasError('passNotEquals')">
+              <ion-label position="stacked">
+                <i style="color: indianred;">Las contraseñas no coinciden.</i>
+              </ion-label>
+            </ion-item>
+            <ion-label position="stacked">
+              {{msgPassRequirements}}
+            </ion-label>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
           <ion-col>
-            <ion-button color="primary" type="submit">Guardar</ion-button>
+            <ion-button [formGroup]="dataformGroup" *ngIf="(!service.usuarioToLogIn.passwordChanged)"
+              [disabled]="!dataformGroup.valid" color="primary" type="submit">Guardar Datos</ion-button>
+            <ion-button [formGroup]="passformGroup" *ngIf="(service.usuarioToLogIn.passwordChanged)"
+              [disabled]="!passformGroup.valid" color="primary" type="submit">Guardar Datos y Contraseña</ion-button>
           </ion-col>
           <ion-col></ion-col>
         </ion-row>

@@ -11,6 +11,7 @@ import {NavController} from "@ionic/angular";
 })
 export class AuthService {
 
+  public loading = false;
   public tokenAuth = new AuthToken();
   private secureKey: string;
   private secureIV: string;
@@ -22,7 +23,7 @@ export class AuthService {
       this.tokenAuth.token = localStorage.getItem("token");
       this.tokenAuth.timeIsValid = +localStorage.getItem("tokenValidTime");
       if(this.isLogged){
-        this.retriveUserData(this.tokenAuth);
+        this.retrieveUserData(this.tokenAuth);
       }else{
         alert('La sesión ha caducado, autenticación requerida');
         this.navCtrl.navigateRoot('/folder/auth');
@@ -60,32 +61,46 @@ export class AuthService {
     return this.tokenAuth.timeIsValid > new Date().getTime();
   }
 
-  async saveDataRegisterService(pusuarioToLogIn: UserData){
 
+
+  async saveDataRegisterService(pusuarioToLogIn: UserData){
+    this.loading = true;
     //await this.encryptar(); //Only available inside a device
-    await this.encryptar(pusuarioToLogIn);
-    this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/user/auth/register", pusuarioToLogIn, { headers: AuthService.initHeaders(), observe: 'response'})
-      .subscribe((res:HttpResponse<AuthToken>) => {
-        this.tokenAuth = res.body;
-        localStorage.setItem("token", this.tokenAuth.token);
-        localStorage.setItem("tokenValidTime", this.tokenAuth.timeIsValid+'');
-        pusuarioToLogIn.password = '';
-        pusuarioToLogIn.passwordConfirmation = '';
-        pusuarioToLogIn.passwordChanged = false;
-        this.retriveUserData(res.body);
+    // await this.encryptar(pusuarioToLogIn);
+    this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/registered?email="+pusuarioToLogIn.email.trim(), { headers: AuthService.initHeaders() , observe: 'response'})
+      .subscribe((res:HttpResponse<Boolean>) => {
+        if(res.body){
+          alert('Correo electrónico invalido , ya existe una cuenta asociada a ' +pusuarioToLogIn.email.trim());
+        }else{
+          this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/user/auth/register", pusuarioToLogIn, { headers: AuthService.initHeaders(), observe: 'response'})
+            .subscribe((res:HttpResponse<AuthToken>) => {
+              this.tokenAuth = res.body;
+              localStorage.setItem("token", this.tokenAuth.token);
+              localStorage.setItem("tokenValidTime", this.tokenAuth.timeIsValid+'');
+              pusuarioToLogIn.password = '';
+              pusuarioToLogIn.passwordConfirmation = '';
+              pusuarioToLogIn.passwordChanged = false;
+              this.retrieveUserData(res.body);
+            }, error => {
+              console.log(error);
+              pusuarioToLogIn.password = '';
+              pusuarioToLogIn.passwordConfirmation = '';
+              pusuarioToLogIn.passwordChanged = false;
+              this.loading = false;
+              alert(JSON.stringify(error));
+            });
+        }
       }, error => {
-        console.log(error);
-        pusuarioToLogIn.password = '';
-        pusuarioToLogIn.passwordConfirmation = '';
-        pusuarioToLogIn.passwordChanged = false;
+        this.loading = false;
         alert(JSON.stringify(error));
       });
+
   }
 
   async loginService(pusuarioToLogIn: UserData) {
 
-    await this.encryptar(pusuarioToLogIn);
-    console.log('Encrypted Data: ',pusuarioToLogIn)
+    // await this.encryptar(pusuarioToLogIn);
+    this.loading = true;
     this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/user/auth", pusuarioToLogIn, { headers: AuthService.initHeaders() , observe: 'response'})
       .subscribe((res:HttpResponse<AuthToken>) => {
         this.tokenAuth = res.body;
@@ -94,16 +109,17 @@ export class AuthService {
         pusuarioToLogIn.password = '';
         pusuarioToLogIn.passwordConfirmation = '';
         pusuarioToLogIn.passwordChanged = false;
-        this.retriveUserData(res.body);
+        this.retrieveUserData(res.body);
       }, error => {
         pusuarioToLogIn.password = '';
         pusuarioToLogIn.passwordConfirmation = '';
         pusuarioToLogIn.passwordChanged = false;
+        this.loading = false;
         alert(JSON.stringify(error));
       });
   }
 
-  retriveUserData(pDataToken: AuthToken){
+  retrieveUserData(pDataToken: AuthToken){
     let headers = AuthService.initHeaders();
     headers = headers.set('Authorization-Bearer', pDataToken.token);
     this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/auth/userdata", { headers: headers , observe: 'response'})
@@ -125,8 +141,10 @@ export class AuthService {
         this.tokenAuth = res.body;
         localStorage.setItem("token", this.tokenAuth.token);
         localStorage.setItem("tokenValidTime", this.tokenAuth.timeIsValid+'');
+        this.loading = false;
       }, error => {
         this.errorThrowed(error);
+        this.loading = false;
       });
   }
 
@@ -138,6 +156,7 @@ export class AuthService {
 
     this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/user/auth/editdata", this.usuarioToLogIn, { headers: headers, observe: 'response'})
       .subscribe((res:HttpResponse<UserData>) => {
+        this.loading = true;
         this.usuarioToLogIn = res.body;
         this.clearPassFields();
       }, error => {
@@ -150,11 +169,13 @@ export class AuthService {
     this.usuarioToLogIn.password = '';
     this.usuarioToLogIn.passwordConfirmation = '';
     this.usuarioToLogIn.passwordChanged = false;
+    this.loading = false;
   }
 
   private errorThrowed(error){
     console.log(error);
     this.clearSessionData();
+    this.loading = false;
     alert(JSON.stringify(error));
   }
 
@@ -173,5 +194,7 @@ export class AuthService {
     this.tokenAuth = new AuthToken();
     this.usuarioToLogIn = new UserData();
     this.usuarioToLogIn.email = emailToSave;
+    localStorage.setItem("token",null);
+    localStorage.setItem("tokenValidTime", null);
   }
 }

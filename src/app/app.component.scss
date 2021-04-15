@@ -122,3 +122,17 @@ ion-item.selected {
   color: ghostwhite;
   background: #36abe0;
 }
+
+ion-spinner {
+  stroke: #ff0000;
+  fill: #8b0000;
+  position: fixed;
+  z-index: 999;
+  height: 5em;
+  width: 5em;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
