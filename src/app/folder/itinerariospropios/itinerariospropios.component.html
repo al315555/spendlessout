@@ -1,3 +1,15 @@
-<p>
-  itinerariospropios works!
-</p>
+<ion-toolbar>
+  <ion-searchbar placeholder="Localidad (al menos 3 caractéres)..." type="text" debounce="500" showCancelButton="focus"
+                 (ionInput)="showTownItems($event)" color="primary" [value]="townSelectedName"></ion-searchbar>
+
+  <ion-list style="border-color: #5d58e0; color: azure;" *ngIf="isItemAvailable">
+    <ion-item *ngFor="let item of items" button (click)="selectionOfItemTown(item)" detail
+              detailIcon="location-outline">
+      <ion-label>{{ item.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-toolbar>
+<div>
+  No hay datos...
+</div>
+

@@ -5,6 +5,8 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {AuthToken} from "./folder/bos/AuthToken";
 import {UserData} from "./folder/bos/UserData";
 import {NavController} from "@ionic/angular";
+import {Town} from "./folder/bos/Town";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +63,15 @@ export class AuthService {
     return this.tokenAuth.timeIsValid > new Date().getTime();
   }
 
+  townItemsRetrieval(pTownName: string): Observable<Object>{
+    this.loading = true;
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/towns?cityname="+pTownName.trim());
+  }
 
+  townFullDateItemRetrieval(pTownName: string): Observable<Object>{
+    this.loading = true;
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/towns/findfullData?fullCityName="+pTownName.trim());
+  }
 
   async saveDataRegisterService(pusuarioToLogIn: UserData){
     this.loading = true;
@@ -115,7 +125,8 @@ export class AuthService {
         pusuarioToLogIn.passwordConfirmation = '';
         pusuarioToLogIn.passwordChanged = false;
         this.loading = false;
-        alert(JSON.stringify(error));
+        console.log(JSON.stringify(error));
+        alert('Usuario o contraseña invalidos')
       });
   }
 
@@ -126,7 +137,7 @@ export class AuthService {
       .subscribe((res:HttpResponse<UserData>) => {
         this.usuarioToLogIn = res.body;
         if(this.isLogged)
-          this.navCtrl.navigateRoot('/folder/datos');
+          this.navCtrl.navigateRoot('/folder/itinerarios');
       }, error => {
         this.errorThrowed(error);
       });
@@ -167,7 +178,7 @@ export class AuthService {
 
   private clearPassFields(){
     this.usuarioToLogIn.password = '';
-    this.usuarioToLogIn.passwordConfirmation = '';
+    this.usuarioToLogIn .passwordConfirmation = '';
     this.usuarioToLogIn.passwordChanged = false;
     this.loading = false;
   }
@@ -186,7 +197,7 @@ export class AuthService {
   }
 
   cancelarLogout(){
-    this.navCtrl.navigateRoot('/folder/datos');
+    this.navCtrl.navigateRoot('/folder/itinerarios');
   }
 
   private clearSessionData() {
