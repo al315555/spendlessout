@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Town} from "../bos/Town";
 import {AuthService} from "../../auth.service";
+import {Itinerario} from "../bos/Itinerario";
 
 @Component({
   selector: 'app-itinerariospropios',
@@ -15,6 +16,8 @@ export class ItinerariospropiosComponent implements OnInit {
   itemTownSelected: Town = new Town();
   isItemTownSelected: boolean = false;
 
+  itinerarios: Itinerario[];
+
   constructor(public service: AuthService) {
   }
 
@@ -24,6 +27,31 @@ export class ItinerariospropiosComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  images = [
+    'bandit',
+    'batmobile',
+    'blues-brothers',
+    'bueller',
+    'delorean',
+    'eleanor',
+    'general-lee',
+    'ghostbusters',
+    'knight-rider',
+    'mirth-mobile'
+  ];
+
+  rotateImg = 0;
+  get imgSrc() {
+    const src = 'https://dummyimage.com/600x400/${Math.round( Math.random() * 99999)}/fff.png';
+    this.rotateImg++;
+    if (this.rotateImg === this.images.length) {
+      this.rotateImg = 0;
+    }
+    return src;
+  }
+
+
 
   showTownItems(ev: any) {
     this.service.loading = true;
@@ -63,12 +91,18 @@ export class ItinerariospropiosComponent implements OnInit {
     this.service.loading = false;
     this.items = [];
     let jsonData;
+    console.log(itemTown);
     this.service.townFullDateItemRetrieval(itemTown.name).subscribe(data => {
       jsonData = data;
       this.service.loading = true;
       this.itemTownSelected = jsonData;
       this.service.loading = false;
-      this.isItemTownSelected = true;
+      if(this.itemTownSelected){
+        this.isItemTownSelected = true;
+      }else{
+        this.isItemTownSelected = false;
+        alert('Ubicación desconocida, seleccione otra población.');
+      }
       console.log(this.itemTownSelected);
     }, error => {
       this.isItemAvailable = false;

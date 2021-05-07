@@ -10,6 +10,18 @@
   </ion-list>
 </ion-toolbar>
 <div>
-  No hay datos...
+  <ion-content>
+    <ion-virtual-scroll [items]="itinerarios" approxItemHeight="210px">
+      <ion-card *virtualItem="let itiner; let itemBounds = bounds;">
+        <div>
+          <ion-img [src]="imgSrc" [alt]="itiner.id"></ion-img>
+        </div>
+        <ion-card-header>
+          <ion-card-title>{{ itiner.nombre }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>{{ itiner.ubicacionNombre }},l:{{ itiner.ubicacionLat }},L:{{ itiner.ubicacionLon }}</ion-card-content>
+      </ion-card>
+    </ion-virtual-scroll>
+  </ion-content>
 </div>
 

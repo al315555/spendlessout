@@ -1,0 +1,31 @@
+<div class="ion-page">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-buttons slot="start" style="color: dodgerblue;">
+        <ion-button (click)="dismiss();">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Itinerario</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <br>
+  <ion-content [fullscreen]="true">
+    <div style="margin-left: 5%;color: dodgerblue;">
+      <h2
+        style="font-weight: bold;"> {{itinerario.nombre.substring(0, 1).toUpperCase() + itinerario.nombre.substring(1)}}</h2>
+    </div>
+    <div style="margin-left: 5%;color: grey;">
+      <h5 style="font-weight: lighter;">Actividades</h5>
+      <!-- TODO listar actividades-->
+    </div>
+    <br><br>
+    <div style="margin-left: 5%;color: grey;">
+      <h5 style="font-weight: lighter;">Total&nbsp;{{itinerario.precioTotal}}&nbsp;&#8364;</h5>
+    </div>
+    <br>
+    <div style="margin-left: 5%;color: grey;">
+      <p style="font-weight: lighter;">{{itinerario.ubicacionNombre}},&nbsp;desde&nbsp;{{itinerario.timeStampFrom}}&nbsp;hasta&nbsp;{{itinerario.timeStampFrom}}</p>
+    </div>
+  </ion-content>
+</div>
