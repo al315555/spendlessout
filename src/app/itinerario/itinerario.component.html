@@ -16,16 +16,25 @@
         style="font-weight: bold;"> {{itinerario.nombre.substring(0, 1).toUpperCase() + itinerario.nombre.substring(1)}}</h2>
     </div>
     <div style="margin-left: 5%;color: grey;">
-      <h5 style="font-weight: lighter;">Actividades</h5>
+      <h5 >Actividades</h5>
+      <ion-list>
+        <ion-item>
+          <ion-buttons>
+            <ion-button style="color: dodgerblue;" (click)="redirectToMoreInfo()">
+              <ion-icon name="information-circle"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-list>
       <!-- TODO listar actividades-->
     </div>
     <br><br>
     <div style="margin-left: 5%;color: grey;">
-      <h5 style="font-weight: lighter;">Total&nbsp;{{itinerario.precioTotal}}&nbsp;&#8364;</h5>
+      <h5 >Total&nbsp;{{itinerario.precioTotal}}&nbsp;&#8364;</h5>
     </div>
     <br>
     <div style="margin-left: 5%;color: grey;">
-      <p style="font-weight: lighter;">{{itinerario.ubicacionNombre}},&nbsp;desde&nbsp;{{itinerario.timeStampFrom}}&nbsp;hasta&nbsp;{{itinerario.timeStampFrom}}</p>
+      <p>{{itinerario.ubicacionNombre}},&nbsp;desde&nbsp;{{itinerario.timeStampFrom}}&nbsp;hasta&nbsp;{{itinerario.timeStampFrom}}</p>
     </div>
   </ion-content>
 </div>

@@ -24,4 +24,7 @@ export class ItinerarioComponent implements OnInit {
   }
 
 
+  redirectToMoreInfo() {
+    window.open("https://www.eventbrite.es/e/entradas-abono-x-festival-early-music-morella-148337646895?aff=ebdssbdestsearch", '_system');
+  }
 }

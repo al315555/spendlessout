@@ -1,3 +1,118 @@
-<p>
-  generaritinerario works!
-</p>
+<ion-card *ngIf="service.isLogged">
+  <ion-card-header>
+    <!--<ion-card-title>Inicie sesión desde aquí...</ion-card-title>
+  -->
+  </ion-card-header>
+
+  <ion-card-content class="ion-align-items-center">
+    <form (ngSubmit)="generateFormSubmit()" [formGroup]="dataformGroup">
+      <ion-grid>
+        <ion-row colspan="2">
+          <ion-col>
+            <ion-item class="ion-padding">
+              <ion-label class="ion-text-wrap" style="color: dodgerblue;">
+                <h2>
+                  <ion-icon name="calendar"></ion-icon>
+                  Rango&nbsp;de&nbsp;fecha&nbsp;y&nbsp;hora
+                </h2>
+              </ion-label>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item class="ion-padding">
+              <ion-datetime displayFormat="MMM DD, YYYY HH:mm"
+                            formControlName="timeStampFrom"
+                            display-timezone="utc"
+                            name="timeStampFrom" minuteValues="00,15,30,45"
+                            [max]="maxDate" [min]="currentDate" hourValues="00,03,09,12,15,18,21,23"
+                            monthShortNames="ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic">
+              </ion-datetime>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item class="ion-padding">
+              <ion-datetime displayFormat="MMM DD, YYYY HH:mm"
+                            formControlName="timeStampTo"
+                            display-timezone="utc"
+                            name="timeStampTo" minuteValues="0,15,30,45"
+                            [max]="maxDate" [min]="currentDate" hourValues="00,03,09,12,15,18,21,23"
+                            monthShortNames="ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic">
+              </ion-datetime>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row colspan="2">
+          <ion-col>
+            <ion-item class="ion-padding">
+              <ion-label position="floating" style="color: dodgerblue;">
+                <h2>
+                  <ion-icon name="location"></ion-icon>
+                  Ciudad&nbsp;y/o&nbsp;Ubicaci&oacute;n
+                </h2>
+              </ion-label>
+              <ion-input type="text" formControlName="ubicacionNombre" [value]="itinerario.ubicacionNombre" required
+                         name="ubicacionNombre" (ionInput)="showTownItems($event)"></ion-input>
+              <ion-list style="border-color: #5d58e0; color: azure;" *ngIf="isItemAvailable">
+                <ion-item *ngFor="let item of items" button (click)="selectionOfItemTown(item)" detail
+                          detailIcon="location-outline">
+                  <ion-label>{{ item.name }}</ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row colspan="2">
+          <ion-col>
+            <ion-item class="ion-padding">
+              <ion-label position="floating" style="color: dodgerblue;">
+                <h2>
+                  <ion-icon name="radio-button-off"></ion-icon>
+                  Rango&nbsp;Kilom&eacute;trico
+                </h2>
+              </ion-label>
+              <ion-input type="number" formControlName="radio" required
+                         name="radio"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row colspan="2">
+          <ion-col>
+            <ion-item class="ion-padding">
+              <ion-label position="floating" style="color: dodgerblue;">
+                <h2>
+                  <ion-icon name="logo-euro"></ion-icon>
+                  L&iacute;mite&nbsp;econ&oacute;mico
+                </h2>
+              </ion-label>
+              <ion-input type="number" formControlName="precioTotal" required
+                         name="precioTotal"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item class="ion-padding">
+              <ion-label position="floating" style="color: dodgerblue;">
+                <h2>
+                  <ion-icon name="car" style="zoom:1.5;"></ion-icon>
+                </h2>
+              </ion-label>
+              <ion-toggle style="margin-left: 10%;" name="hasCar" formControlName="hasCar"></ion-toggle>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col>
+            <ion-button [formGroup]="dataformGroup"
+                        [disabled]="!dataformGroup.valid" color="primary" type="submit">Generar itinerario
+            </ion-button>
+          </ion-col>
+          <ion-col></ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-card-content>
+</ion-card>

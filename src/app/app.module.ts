@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import {HttpClientModule} from "@angular/common/http";
 import {AES256} from "@ionic-native/aes-256/ngx";
 
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
