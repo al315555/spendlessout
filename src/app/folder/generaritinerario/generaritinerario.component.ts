@@ -4,6 +4,8 @@ import {AuthService} from "../../auth.service";
 import {Itinerario} from "../bos/Itinerario";
 import {DatePipe} from "@angular/common";
 import {Town} from "../bos/Town";
+import {ItinerarioComponent} from "../../itinerario/itinerario.component";
+import {ModalController} from "@ionic/angular";
 
 @Component({
   selector: 'app-generaritinerario',
@@ -17,6 +19,7 @@ export class GeneraritinerarioComponent implements OnInit {
 
   public dataformGroup = this.formBuilder.group({
       ubicacionNombre: [this.itinerario.ubicacionNombre, [Validators.required]],
+      nombre: [this.itinerario.nombre, [Validators.required]],
       radio: [this.itinerario.radio, [Validators.required]],
       precioTotal: [this.itinerario.precioTotal, [Validators.required]],
       hasCar: [this.itinerario.hasCar, []],
@@ -25,14 +28,28 @@ export class GeneraritinerarioComponent implements OnInit {
     }
   );
 
-  constructor(public service: AuthService, public formBuilder: FormBuilder, private datePipe: DatePipe) {
+  constructor(public service: AuthService, public formBuilder: FormBuilder, private datePipe: DatePipe, public modalController: ModalController) {
   }
 
   ngOnInit() {
   }
 
-  generateFormSubmit() {
+  async generateFormSubmit() {
+    let datefrom = new Date();
 
+    this.itinerario.nombre = this.dataformGroup.value.nombre;
+    this.itinerario.timeStampTo = new Date(this.dataformGroup.value.timeStampTo).getTime();
+    this.itinerario.timeStampFrom = new Date(this.dataformGroup.value.timeStampFrom).getTime();
+    this.itinerario.hasCar = this.dataformGroup.value.hasCar;
+    this.itinerario.radio = this.dataformGroup.value.radio;
+    this.itinerario.timeStampCreacion = Date.now();
+    console.log(this.itinerario);
+    await this.service.generateItinerarioData(this.itinerario);
+    const modal = await this.modalController.create({
+      component: ItinerarioComponent,
+      componentProps: {itinerario: this.service.itinerarioSelected}
+    });
+    return await modal.present();
   }
 
   get currentDateWoTime(){

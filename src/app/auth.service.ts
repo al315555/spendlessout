@@ -7,11 +7,14 @@ import {UserData} from "./folder/bos/UserData";
 import {NavController} from "@ionic/angular";
 import {Town} from "./folder/bos/Town";
 import {Observable} from "rxjs";
+import {Itinerario} from "./folder/bos/Itinerario";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  public itinerarioSelected: Itinerario;
 
   public loading = false;
   public tokenAuth = new AuthToken();
@@ -158,6 +161,22 @@ export class AuthService {
         this.loading = false;
       });
   }
+
+  async generateItinerarioData(itinerario: Itinerario){
+    this.loading = true;
+    let headers = AuthService.initHeaders();
+    headers = headers.set('Authorization-Bearer', this.tokenAuth.token);
+
+    this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/generar", itinerario, { headers: headers, observe: 'response'})
+      .subscribe((res:HttpResponse<Itinerario>) => {
+        this.itinerarioSelected = res.body;
+        this.loading = false;
+      }, error => {
+        this.errorThrowed(error);
+      });
+    this.refreshToken();
+  }
+
 
   async saveOwnData(){
 
