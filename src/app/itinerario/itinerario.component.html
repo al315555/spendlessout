@@ -13,28 +13,48 @@
   <ion-content [fullscreen]="true">
     <div style="margin-left: 5%;color: dodgerblue;">
       <h2
-        style="font-weight: bold;"> {{itinerario.nombre.substring(0, 1).toUpperCase() + itinerario.nombre.substring(1)}}</h2>
+        style="font-weight: bold;"> {{service.itinerarioSelected.nombre.substring(0, 1).toUpperCase() + service.itinerarioSelected.nombre.substring(1)}}</h2>
     </div>
     <div style="margin-left: 5%;color: grey;">
       <h5>Actividades</h5>
-      <ion-list>
-        <ion-item>
+      <ion-list *ngIf="actividades.length > 0">
+        <ion-item *ngFor="let act of actividades; let i = index">
+          <ion-label style="zoom:1.2;">{{act.precio}}<ion-icon name="logo-euro"></ion-icon></ion-label>
+          <ion-grid>
+            <ion-row colspan="2">
+              <ion-col>
+                <ion-label style="font-size:medium; color: grey;">{{act.nombre}}</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-label>{{formatRangeDate(act.timeStampFrom)}}</ion-label>
+              </ion-col>
+              <ion-col>
+                <ion-label>{{formatRangeDate(act.timeStampTo)}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
           <ion-buttons>
-            <ion-button style="color: dodgerblue;" (click)="redirectToMoreInfo()">
+            <ion-button style="color: dodgerblue;" (click)="redirectToMoreInfo(act.url)">
               <ion-icon name="information-circle"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-item>
       </ion-list>
-      <!-- TODO listar actividades-->
+      <ion-label *ngIf="actividades.length === 0">No&nbsp;encontradas<ion-icon name="sad-outline"></ion-icon></ion-label>
     </div>
     <br><br>
     <div style="margin-left: 5%;color: grey;">
-      <h5 >Total&nbsp;{{itinerario.precioTotal}}&nbsp;&#8364;</h5>
+      <h5>Total&nbsp;{{service.itinerarioSelected.precioTotal}}&nbsp;&#8364;</h5>
     </div>
     <br>
     <div style="margin-left: 5%;color: grey;">
-      <p>{{itinerario.ubicacionNombre}},&nbsp;desde&nbsp;{{itinerario.timeStampFrom}}&nbsp;hasta&nbsp;{{itinerario.timeStampFrom}}</p>
+      <p>{{service.itinerarioSelected.ubicacionNombre}}
+        ,&nbsp;desde&nbsp;{{formatRangeDate(service.itinerarioSelected.timeStampFrom)}}&nbsp;hasta&nbsp;{{formatRangeDate(service.itinerarioSelected.timeStampFrom)}}</p>
+    </div>
+    <div style="margin-left: 5%;color: grey;">
+      <p>Creado {{formatDate(service.itinerarioSelected.timeStampCreacion)}}</p>
     </div>
   </ion-content>
 </div>

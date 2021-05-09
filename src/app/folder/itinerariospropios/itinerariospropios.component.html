@@ -10,18 +10,38 @@
   </ion-list>
 </ion-toolbar>
 <div>
-  <ion-content>
-    <ion-virtual-scroll [items]="itinerarios" approxItemHeight="210px">
-      <ion-card *virtualItem="let itiner; let itemBounds = bounds;">
-        <div>
-          <ion-img [src]="imgSrc" [alt]="itiner.id"></ion-img>
-        </div>
-        <ion-card-header>
-          <ion-card-title>{{ itiner.nombre }}</ion-card-title>
+  <ion-list *ngIf="itinerarios.length > 0">
+    <ion-item *ngFor="let itiner of itinerarios; let i = index">
+      <ion-card button style="margin-left: 24%;" (click)="presentItinerarioModal(i);"
+                [style]="i%2 == 0 ? 'border: 1.9px solid dodgerblue; color:lightslategrey;': 'border: 0.1px solid dodgerblue; color:lightslategrey;'">
+        <ion-card-header color="lightslategrey">
+          <ion-card-title>
+            <ion-icon *ngIf="i%2 == 0" name="map-outline"></ion-icon>
+            <ion-icon *ngIf="i%2 !== 0"
+                      name="map"></ion-icon>&nbsp;{{ itiner.nombre.substring(0, 1).toUpperCase() + itiner.nombre.substring(1)}}
+          </ion-card-title>
         </ion-card-header>
-        <ion-card-content>{{ itiner.ubicacionNombre }},l:{{ itiner.ubicacionLat }},L:{{ itiner.ubicacionLon }}</ion-card-content>
-      </ion-card>
-    </ion-virtual-scroll>
-  </ion-content>
-</div>
+        <ion-card-content>
+          <ion-icon *ngIf="i%2 == 0" name="location-outline"></ion-icon>
+          <ion-icon *ngIf="i%2 !== 0" name="location"></ion-icon>
+          &nbsp;{{ itiner.ubicacionNombre.substring(0, 1).toUpperCase() + itiner.ubicacionNombre.substring(1) }}
+          <br>
+          {{ itiner.precioTotal}}&nbsp;&#8364;
+          <br>
+          Generado {{formatDate(itiner.timeStampCreacion)}}
 
+        </ion-card-content>
+      </ion-card>
+
+    </ion-item>
+  </ion-list>
+  <br>
+  <ion-label *ngIf="(townSelectedName && townSelectedName.length > 3) && itinerarios.length < 1 " ><i style="margin-left: 26%;">
+    <ion-icon name="sad-outline" color="dodgerblue"></ion-icon>
+  </i>&nbsp;No hay itinerarios
+  </ion-label>
+  <ion-label *ngIf="(!townSelectedName || townSelectedName.length < 3) && itinerarios.length < 1 "><i  style="margin-left: 24%;">
+    <ion-icon name="list-outline" color="dodgerblue"></ion-icon>
+  </i>&nbsp;Es necesario filtrar por población.
+  </ion-label>
+</div>

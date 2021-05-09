@@ -4,10 +4,12 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 // import { HTTP } from '@ionic-native/http/ngx';
 import {AuthToken} from "./folder/bos/AuthToken";
 import {UserData} from "./folder/bos/UserData";
-import {NavController} from "@ionic/angular";
+import {ModalController, NavController} from "@ionic/angular";
 import {Town} from "./folder/bos/Town";
 import {Observable} from "rxjs";
 import {Itinerario} from "./folder/bos/Itinerario";
+import {ItinerarioComponent} from "./itinerario/itinerario.component";
+import {GeneraritinerarioComponent} from "./folder/generaritinerario/generaritinerario.component";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,7 @@ export class AuthService {
   private secureIV: string;
   public usuarioToLogIn = new UserData();
 
-  constructor(public http: HttpClient, private navCtrl: NavController, private aes256: AES256) {
+  constructor(public http: HttpClient, private navCtrl: NavController, private aes256: AES256, public modalController: ModalController) {
     if(localStorage.getItem("token") !== null && localStorage.getItem("token") !== "" &&
        localStorage.getItem("tokenValidTime") && +localStorage.getItem("tokenValidTime") > 0  ){
       this.tokenAuth.token = localStorage.getItem("token");
@@ -74,6 +76,23 @@ export class AuthService {
   townFullDateItemRetrieval(pTownName: string): Observable<Object>{
     this.loading = true;
     return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/towns/findfullData?fullCityName="+pTownName.trim());
+  }
+
+  getActivitiesFromItinerario(pItinerarioId: number){
+    this.loading = true;
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/actividades?itinerarioId="+pItinerarioId, { headers: AuthService.initHeaders() , observe: 'response'});
+  }
+
+  getItinerariosFromActivitiesFromItinerario(){
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/itinerario/listado?userId="+this.usuarioToLogIn.id, { headers: AuthService.initHeaders() , observe: 'response'});
+  }
+
+  getFilteredItinerariosFromActivitiesFromItinerario(selectedTown: Town){
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/itinerario/listadobytown?userId="+this.usuarioToLogIn.id+'&townName='+selectedTown.name+'&townLat='+selectedTown.lat+'&townLon='+selectedTown.lon, { headers: AuthService.initHeaders() , observe: 'response'});
+  }
+
+  getFilteredItinerarios(selectedTown: Town){
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/listado?townName="+selectedTown.name+'&townLat='+selectedTown.lat+'&townLon='+selectedTown.lon, { headers: AuthService.initHeaders() , observe: 'response'});
   }
 
   async saveDataRegisterService(pusuarioToLogIn: UserData){
@@ -162,17 +181,19 @@ export class AuthService {
       });
   }
 
-  async generateItinerarioData(itinerario: Itinerario){
+  generateItinerarioData(itinerario: Itinerario, generador: GeneraritinerarioComponent){
     this.loading = true;
     let headers = AuthService.initHeaders();
     headers = headers.set('Authorization-Bearer', this.tokenAuth.token);
-
+    this.loading = true;
     this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/generar", itinerario, { headers: headers, observe: 'response'})
       .subscribe((res:HttpResponse<Itinerario>) => {
         this.itinerarioSelected = res.body;
-        this.loading = false;
+        generador.generarViewItinerario(this.itinerarioSelected );
+
       }, error => {
-        this.errorThrowed(error);
+        console.log(error);
+        alert('No sé ha podido generar | ' + JSON.stringify(error) );
       });
     this.refreshToken();
   }

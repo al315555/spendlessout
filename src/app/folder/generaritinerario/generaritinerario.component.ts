@@ -34,22 +34,29 @@ export class GeneraritinerarioComponent implements OnInit {
   ngOnInit() {
   }
 
-  async generateFormSubmit() {
-    let datefrom = new Date();
+  async generarViewItinerario(itinerario: Itinerario){
+    this.itinerario = itinerario;
+    const modal = await this.modalController.create({
+      component: ItinerarioComponent,
+      componentProps: {itinerario: this.itinerario}
+    });
+    this.service.loading = false;
+    return await modal.present();
+  }
 
+  generateFormSubmit() {
+    this.itinerario.id = 0;
     this.itinerario.nombre = this.dataformGroup.value.nombre;
     this.itinerario.timeStampTo = new Date(this.dataformGroup.value.timeStampTo).getTime();
     this.itinerario.timeStampFrom = new Date(this.dataformGroup.value.timeStampFrom).getTime();
     this.itinerario.hasCar = this.dataformGroup.value.hasCar;
     this.itinerario.radio = this.dataformGroup.value.radio;
+    this.itinerario.precioTotal = this.dataformGroup.value.precioTotal;
     this.itinerario.timeStampCreacion = Date.now();
+    this.itinerario.idUser = this.service.usuarioToLogIn.id;
     console.log(this.itinerario);
-    await this.service.generateItinerarioData(this.itinerario);
-    const modal = await this.modalController.create({
-      component: ItinerarioComponent,
-      componentProps: {itinerario: this.service.itinerarioSelected}
-    });
-    return await modal.present();
+    this.service.itinerarioSelected = this.itinerario;
+    return this.service.generateItinerarioData(this.itinerario, this);
   }
 
   get currentDateWoTime(){

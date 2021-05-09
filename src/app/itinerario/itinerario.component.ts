@@ -1,6 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Itinerario} from "../folder/bos/Itinerario";
 import {ModalController} from "@ionic/angular";
+import {AuthService} from "../auth.service";
+import {HttpResponse} from "@angular/common/http";
+import {Actividad} from "../folder/bos/Actividad";
 
 @Component({
   selector: 'app-itinerario',
@@ -11,9 +14,25 @@ export class ItinerarioComponent implements OnInit {
 
   @Input() itinerario: Itinerario;
 
-  constructor(public modalController: ModalController) { }
+  actividades: Actividad[] = [];
 
-  ngOnInit() {}
+  public DEMO_URL = 'https://www.eventbrite.es/e/entradas-abono-x-festival-early-music-morella-148337646895?aff=ebdssbdestsearch';
+
+  constructor(public modalController: ModalController, public service: AuthService) { }
+
+  ngOnInit() {
+    this.loadActividades();
+  }
+
+  loadActividades(){
+    this.service.getActivitiesFromItinerario(this.itinerario.id).subscribe((res:HttpResponse<Array<Actividad>>) => {
+      let arrayActividades = res.body;
+      for (let act of arrayActividades) {
+        this.actividades.push(act);
+      }
+      this.service.loading = false;
+    });
+  }
 
   dismiss() {
     // using the injected ModalController this page
@@ -23,8 +42,37 @@ export class ItinerarioComponent implements OnInit {
     });
   }
 
+  formatRangeDate(dateFromMilliseconds: number): string{
+    let date = new Date();
+    date.setTime(dateFromMilliseconds);
+    return date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes();
+  }
 
-  redirectToMoreInfo() {
-    window.open("https://www.eventbrite.es/e/entradas-abono-x-festival-early-music-morella-148337646895?aff=ebdssbdestsearch", '_system');
+  formatDate(dateMilliseconds: number): string{
+    const millisecsDiffer = new Date().getTime() - dateMilliseconds;
+    const secsDiffer = millisecsDiffer / 1000;
+    const minsDiffer = secsDiffer / 60;
+    if(minsDiffer < 1){
+      return 'hace ' + secsDiffer.toFixed(0) + ' segundos';
+    }
+    const hoursDiffer = minsDiffer / 60;
+    if(hoursDiffer < 1){
+      return 'hace ' + minsDiffer.toFixed(0) + ' minuto(s)';
+    }
+    const daysDiffer = hoursDiffer / 24;
+    if(daysDiffer < 1){
+      return 'hace ' + hoursDiffer.toFixed(0) + ' hora(s)';
+    }
+    const weeksDiffer = daysDiffer / 7;
+    if(weeksDiffer < 1){
+      return 'hace ' + daysDiffer.toFixed(0) + ' día(s)';
+    }
+    return 'hace ' + weeksDiffer.toFixed(0) + ' semana(s)';
+  }
+
+
+  redirectToMoreInfo(url: string) {
+    window.open(url, '_system');
+    //"https://www.eventbrite.es/e/entradas-abono-x-festival-early-music-morella-148337646895?aff=ebdssbdestsearch", '_system');
   }
 }

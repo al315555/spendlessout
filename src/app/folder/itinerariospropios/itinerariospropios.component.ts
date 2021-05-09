@@ -2,6 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {Town} from "../bos/Town";
 import {AuthService} from "../../auth.service";
 import {Itinerario} from "../bos/Itinerario";
+import {ItinerarioComponent} from "../../itinerario/itinerario.component";
+import {ModalController} from "@ionic/angular";
+import {HttpResponse} from "@angular/common/http";
+import {Actividad} from "../bos/Actividad";
 
 @Component({
   selector: 'app-itinerariospropios',
@@ -18,7 +22,7 @@ export class ItinerariospropiosComponent implements OnInit {
 
   itinerarios: Itinerario[];
 
-  constructor(public service: AuthService) {
+  constructor(public service: AuthService, public modalController: ModalController) {
   }
 
   get townSelectedName() {
@@ -26,6 +30,17 @@ export class ItinerariospropiosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.itinerarios = [];
+
+    this.service.getItinerariosFromActivitiesFromItinerario().subscribe((res:HttpResponse<Array<Itinerario>>) => {
+      let arrayIti = res.body;
+      for (let iti of arrayIti) {
+        this.itinerarios.push(iti);
+      }
+      this.service.loading = false;
+    });
+
+
   }
 
   images = [
@@ -99,6 +114,14 @@ export class ItinerariospropiosComponent implements OnInit {
       this.service.loading = false;
       if(this.itemTownSelected){
         this.isItemTownSelected = true;
+        this.itinerarios = [];
+        this.service.getFilteredItinerariosFromActivitiesFromItinerario(this.itemTownSelected).subscribe((res:HttpResponse<Array<Itinerario>>) => {
+          let arrayIti = res.body;
+          for (let iti of arrayIti) {
+            this.itinerarios.push(iti);
+          }
+          this.service.loading = false;
+        });
       }else{
         this.isItemTownSelected = false;
         alert('Ubicación desconocida, seleccione otra población.');
@@ -111,5 +134,36 @@ export class ItinerariospropiosComponent implements OnInit {
       console.error(error);
       alert('Ubicación desconocida, seleccione otra población.');
     });
+  }
+
+  formatDate(dateMilliseconds: number): string{
+    const millisecsDiffer = new Date().getTime() - dateMilliseconds;
+    const secsDiffer = millisecsDiffer / 1000;
+    const minsDiffer = secsDiffer / 60;
+    if(minsDiffer < 1){
+      return 'hace ' + secsDiffer.toFixed(0) + ' segundos';
+    }
+    const hoursDiffer = minsDiffer / 60;
+    if(hoursDiffer < 1){
+      return 'hace ' + minsDiffer.toFixed(0) + ' minuto(s)';
+    }
+    const daysDiffer = hoursDiffer / 24;
+    if(daysDiffer < 1){
+      return 'hace ' + hoursDiffer.toFixed(0) + ' hora(s)';
+    }
+    const weeksDiffer = daysDiffer / 7;
+    if(weeksDiffer < 1){
+      return 'hace ' + daysDiffer.toFixed(0) + ' día(s)';
+    }
+    return 'hace ' + weeksDiffer.toFixed(0) + ' semana(s)';
+  }
+
+  async presentItinerarioModal(i: number) {
+    this.service.itinerarioSelected = this.itinerarios[i];
+    const modal = await this.modalController.create({
+      component: ItinerarioComponent,
+      componentProps: {itinerario: this.itinerarios[i]}
+    });
+    return await modal.present();
   }
 }

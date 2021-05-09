@@ -4,6 +4,7 @@ import {AuthService} from "../../auth.service";
 import {Itinerario} from "../bos/Itinerario";
 import { ModalController } from '@ionic/angular';
 import {ItinerarioComponent} from "../../itinerario/itinerario.component";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-itinerarios',
@@ -30,21 +31,7 @@ export class ItinerariosComponent implements OnInit {
   }
 
   ngOnInit() {
-    let itinerario = new Itinerario();
-    itinerario.id = 1;
-    itinerario.nombre = 'primero';
-    itinerario.ubicacionNombre = 'primero UBI';
-    itinerario.precioTotal = 22.12;
-    itinerario.radio = 6.2;
-    itinerario.timeStampCreacion = new Date().getTime() - (12*3600*1000);
-    itinerario.ubicacionLat = 0.005;
-    itinerario.ubicacionLon = -0.58;
-
     this.itinerarios = [];
-    this.itinerarios.push(itinerario);
-    this.itinerarios.push(itinerario);
-    this.itinerarios.push(itinerario);
-    this.itinerarios.push(itinerario);
   }
 
   formatDate(dateMilliseconds: number): string{
@@ -115,6 +102,14 @@ export class ItinerariosComponent implements OnInit {
       this.service.loading = false;
       if(this.itemTownSelected){
         this.isItemTownSelected = true;
+        this.itinerarios = [];
+        this.service.getFilteredItinerarios(this.itemTownSelected).subscribe((res:HttpResponse<Array<Itinerario>>) => {
+          let arrayIti = res.body;
+          for (let iti of arrayIti) {
+            this.itinerarios.push(iti);
+          }
+          this.service.loading = false;
+        });
       }else{
         this.isItemTownSelected = false;
         alert('Ubicación desconocida, seleccione otra población.');
@@ -133,7 +128,7 @@ export class ItinerariosComponent implements OnInit {
     this.itinerarioSelected = this.itinerarios[i];
     const modal = await this.modalController.create({
       component: ItinerarioComponent,
-      componentProps: {itinerario: this.itinerarioSelected}
+      componentProps: {itinerario: this.itinerarios[i]}
     });
     return await modal.present();
   }

@@ -8,10 +8,11 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import {HttpClientModule} from "@angular/common/http";
 import {AES256} from "@ionic-native/aes-256/ngx";
+import {ItinerarioComponent} from "./itinerario/itinerario.component";
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ItinerarioComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AES256],
