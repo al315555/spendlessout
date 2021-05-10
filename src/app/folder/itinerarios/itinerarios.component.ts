@@ -125,7 +125,7 @@ export class ItinerariosComponent implements OnInit {
   }
 
   async presentItinerarioModal(i: number) {
-    this.itinerarioSelected = this.itinerarios[i];
+    this.service.itinerarioSelected = this.itinerarios[i];
     const modal = await this.modalController.create({
       component: ItinerarioComponent,
       componentProps: {itinerario: this.itinerarios[i]}

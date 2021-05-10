@@ -39,6 +39,8 @@
               <ion-datetime displayFormat="MMM DD, YYYY HH:mm"
                             formControlName="timeStampFrom"
                             display-timezone="utc"
+                            doneText="Seleccionar"
+                            cancelText="Cancelar"
                             name="timeStampFrom" minuteValues="00,15,30,45"
                             [max]="maxDate" [min]="currentDate" hourValues="00,03,09,12,15,18,21,23"
                             monthShortNames="ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic">
@@ -50,6 +52,8 @@
               <ion-datetime displayFormat="MMM DD, YYYY HH:mm"
                             formControlName="timeStampTo"
                             display-timezone="utc"
+                            doneText="Seleccionar"
+                            cancelText="Cancelar"
                             name="timeStampTo" minuteValues="0,15,30,45"
                             [max]="maxDate" [min]="currentDate" hourValues="00,03,09,12,15,18,21,23"
                             monthShortNames="ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic">
@@ -87,7 +91,7 @@
                 </h2>
               </ion-label>
               <ion-input type="number" formControlName="radio" required
-                         name="radio"></ion-input>
+                         name="radio" (ionChange)="onChangeRadio($event)"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -105,7 +109,7 @@
             </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row [hidden]="!hiddenCarToggle">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="floating" style="color: dodgerblue;">
@@ -113,7 +117,7 @@
                   <ion-icon name="car" style="zoom:1.5;"></ion-icon>
                 </h2>
               </ion-label>
-              <ion-toggle style="margin-left: 10%;" name="hasCar" formControlName="hasCar"></ion-toggle>
+              <ion-toggle style="margin-left: 10%;" name="hasCar" formControlName="hasCar" ></ion-toggle>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -122,6 +126,9 @@
           <ion-col>
             <ion-button [formGroup]="dataformGroup"
                         [disabled]="!dataformGroup.valid" color="primary" type="submit">Generar itinerario
+            </ion-button>
+            <ion-button [formGroup]="dataformGroup" (click)="dataformGroup.reset()"
+                        color="warning" type="button">Limpiar&nbsp;formulario
             </ion-button>
           </ion-col>
           <ion-col></ion-col>

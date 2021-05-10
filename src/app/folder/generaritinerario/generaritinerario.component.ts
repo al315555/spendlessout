@@ -31,6 +31,12 @@ export class GeneraritinerarioComponent implements OnInit {
   constructor(public service: AuthService, public formBuilder: FormBuilder, private datePipe: DatePipe, public modalController: ModalController) {
   }
 
+  public hiddenCarToggle: boolean = false;
+
+  onChangeRadio(event){
+    this.hiddenCarToggle = this.dataformGroup && this.dataformGroup.value.radio && this.dataformGroup.value.radio > 3;
+  }
+
   ngOnInit() {
   }
 
@@ -40,11 +46,11 @@ export class GeneraritinerarioComponent implements OnInit {
       component: ItinerarioComponent,
       componentProps: {itinerario: this.itinerario}
     });
-    this.service.loading = false;
     return await modal.present();
   }
 
   generateFormSubmit() {
+    this.service.loading = true;
     this.itinerario.id = 0;
     this.itinerario.nombre = this.dataformGroup.value.nombre;
     this.itinerario.timeStampTo = new Date(this.dataformGroup.value.timeStampTo).getTime();
@@ -56,7 +62,9 @@ export class GeneraritinerarioComponent implements OnInit {
     this.itinerario.idUser = this.service.usuarioToLogIn.id;
     console.log(this.itinerario);
     this.service.itinerarioSelected = this.itinerario;
-    return this.service.generateItinerarioData(this.itinerario, this);
+    this.service.generateItinerarioData(this.itinerario, this);
+    this.generarViewItinerario(this.service.itinerarioSelected);
+    this.dataformGroup.reset();
   }
 
   get currentDateWoTime(){

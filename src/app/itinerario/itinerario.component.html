@@ -1,4 +1,4 @@
-<div class="ion-page">
+<div class="ion-page" *ngIf="!service.loading">
   <ion-header [translucent]="true">
     <ion-toolbar>
       <ion-buttons slot="start" style="color: dodgerblue;">
@@ -13,17 +13,28 @@
   <ion-content [fullscreen]="true">
     <div style="margin-left: 5%;color: dodgerblue;">
       <h2
-        style="font-weight: bold;"> {{service.itinerarioSelected.nombre.substring(0, 1).toUpperCase() + service.itinerarioSelected.nombre.substring(1)}}</h2>
+        style="font-weight: bold;"> {{service.itinerarioSelected && service.itinerarioSelected.nombre && service.itinerarioSelected.nombre.length > 1 ? service.itinerarioSelected.nombre.substring(0, 1).toUpperCase() + service.itinerarioSelected.nombre.substring(1).toLowerCase() : ''}}</h2>
     </div>
     <div style="margin-left: 5%;color: grey;">
       <h5>Actividades</h5>
       <ion-list *ngIf="actividades.length > 0">
         <ion-item *ngFor="let act of actividades; let i = index">
-          <ion-label style="zoom:1.2;">{{act.precio}}<ion-icon name="logo-euro"></ion-icon></ion-label>
           <ion-grid>
+            <ion-row rowspan="2">
+              <ion-col rowspan="2">
+                <ion-buttons>
+                  <ion-button (click)="redirectToMoreInfo(act.url)">
+                    <ion-label style="zoom:1.2;">{{act.precio}}<ion-icon name="logo-euro"></ion-icon></ion-label>
+                    <ion-icon style="color: dodgerblue;" name="information-circle"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-col>
+            </ion-row>
             <ion-row colspan="2">
-              <ion-col>
-                <ion-label style="font-size:medium; color: grey;">{{act.nombre}}</ion-label>
+              <ion-col colspan="2">
+                <ion-label style="font-size:large; color: grey;" position="stacked">
+                  <a (click)="redirectToMoreInfo(act.url)">{{act.nombre.length > 55 ? act.nombre.substring(0,50) + '...' : act.nombre}}</a>
+                </ion-label>
               </ion-col>
             </ion-row>
             <ion-row>
@@ -35,26 +46,27 @@
               </ion-col>
             </ion-row>
           </ion-grid>
-          <ion-buttons>
-            <ion-button style="color: dodgerblue;" (click)="redirectToMoreInfo(act.url)">
-              <ion-icon name="information-circle"></ion-icon>
-            </ion-button>
-          </ion-buttons>
         </ion-item>
       </ion-list>
       <ion-label *ngIf="actividades.length === 0">No&nbsp;encontradas<ion-icon name="sad-outline"></ion-icon></ion-label>
     </div>
     <br><br>
     <div style="margin-left: 5%;color: grey;">
-      <h5>Total&nbsp;{{service.itinerarioSelected.precioTotal}}&nbsp;&#8364;</h5>
+      <h5>&nbsp;Precio&nbsp;total&nbsp;menor&nbsp;o&nbsp;igual&nbsp;a&nbsp;{{service.itinerarioSelected && service.itinerarioSelected.precioTotal ? service.itinerarioSelected.precioTotal : 'Desconocido'}}&nbsp;&#8364;&nbsp;
+      </h5>
+      <h5>
+        &nbsp;A&nbsp;un&nbsp;radio&nbsp;menor&nbsp;o&nbsp;igual&nbsp;de&nbsp;{{service.itinerarioSelected && service.itinerarioSelected.radio ? service.itinerarioSelected.radio : 'Desconocido'}}&nbsp;kil&oacute;metros
+      </h5>
     </div>
     <br>
     <div style="margin-left: 5%;color: grey;">
-      <p>{{service.itinerarioSelected.ubicacionNombre}}
-        ,&nbsp;desde&nbsp;{{formatRangeDate(service.itinerarioSelected.timeStampFrom)}}&nbsp;hasta&nbsp;{{formatRangeDate(service.itinerarioSelected.timeStampFrom)}}</p>
+      <p>{{service.itinerarioSelected  && service.itinerarioSelected.ubicacionNombre ? service.itinerarioSelected.ubicacionNombre : ''}}</p>
+      <p>,&nbsp;desde&nbsp;{{service.itinerarioSelected && service.itinerarioSelected.timeStampFrom ? formatRangeDate(service.itinerarioSelected.timeStampFrom) : ''}}</p>
+      <p>&nbsp;&nbsp;hasta&nbsp;&nbsp;{{ service.itinerarioSelected && service.itinerarioSelected.timeStampTo ? formatRangeDate(service.itinerarioSelected.timeStampFrom): ''}}</p>
     </div>
     <div style="margin-left: 5%;color: grey;">
       <p>Creado {{formatDate(service.itinerarioSelected.timeStampCreacion)}}</p>
     </div>
   </ion-content>
 </div>
+<ion-spinner *ngIf="service.loading" color="primary"></ion-spinner>

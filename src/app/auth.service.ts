@@ -32,6 +32,8 @@ export class AuthService {
       if(this.isLogged){
         this.retrieveUserData(this.tokenAuth);
       }else{
+        localStorage.setItem("token", null);
+        localStorage.setItem("tokenValidTime", null);
         alert('La sesión ha caducado, autenticación requerida');
         this.navCtrl.navigateRoot('/folder/auth');
       }
@@ -102,6 +104,10 @@ export class AuthService {
     this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/registered?email="+pusuarioToLogIn.email.trim(), { headers: AuthService.initHeaders() , observe: 'response'})
       .subscribe((res:HttpResponse<Boolean>) => {
         if(res.body){
+          pusuarioToLogIn.password = '';
+          pusuarioToLogIn.passwordConfirmation = '';
+          pusuarioToLogIn.passwordChanged = false;
+          this.loading = false;
           alert('Correo electrónico invalido , ya existe una cuenta asociada a ' +pusuarioToLogIn.email.trim());
         }else{
           this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/user/auth/register", pusuarioToLogIn, { headers: AuthService.initHeaders(), observe: 'response'})
@@ -182,15 +188,13 @@ export class AuthService {
   }
 
   generateItinerarioData(itinerario: Itinerario, generador: GeneraritinerarioComponent){
-    this.loading = true;
     let headers = AuthService.initHeaders();
     headers = headers.set('Authorization-Bearer', this.tokenAuth.token);
-    this.loading = true;
     this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/generar", itinerario, { headers: headers, observe: 'response'})
       .subscribe((res:HttpResponse<Itinerario>) => {
         this.itinerarioSelected = res.body;
-        generador.generarViewItinerario(this.itinerarioSelected );
-
+        console.log(res.body);
+        this.loading = false;
       }, error => {
         console.log(error);
         alert('No sé ha podido generar | ' + JSON.stringify(error) );
