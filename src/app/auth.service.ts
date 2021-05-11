@@ -188,14 +188,17 @@ export class AuthService {
   }
 
   generateItinerarioData(itinerario: Itinerario, generador: GeneraritinerarioComponent){
+    this.loading = true;
     let headers = AuthService.initHeaders();
     headers = headers.set('Authorization-Bearer', this.tokenAuth.token);
     this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/generar", itinerario, { headers: headers, observe: 'response'})
       .subscribe((res:HttpResponse<Itinerario>) => {
         this.itinerarioSelected = res.body;
         console.log(res.body);
+        generador.generarViewItinerario(this.itinerarioSelected);
         this.loading = false;
       }, error => {
+        this.loading = false;
         console.log(error);
         alert('No sé ha podido generar | ' + JSON.stringify(error) );
       });

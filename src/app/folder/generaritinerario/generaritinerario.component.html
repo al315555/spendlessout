@@ -62,6 +62,11 @@
           </ion-col>
         </ion-row>
         <ion-row colspan="2">
+          <ion-col colspan="2"><i *ngIf="dataformGroup.hasError('areNotFromDateLessThanToDate')"
+                                  style="color: indianred;">La primera fecha debe ser menor que la segunda.</i>
+          </ion-col>
+        </ion-row>
+        <ion-row colspan="2">
           <ion-col>
             <ion-item class="ion-padding">
               <ion-label position="floating" style="color: dodgerblue;">
@@ -117,7 +122,7 @@
                   <ion-icon name="car" style="zoom:1.5;"></ion-icon>
                 </h2>
               </ion-label>
-              <ion-toggle style="margin-left: 10%;" name="hasCar" formControlName="hasCar" ></ion-toggle>
+              <ion-toggle style="margin-left: 10%;" name="hasCar" formControlName="hasCar"></ion-toggle>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -137,3 +142,4 @@
     </form>
   </ion-card-content>
 </ion-card>
+<ion-spinner *ngIf="service.loading" color="primary"></ion-spinner>

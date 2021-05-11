@@ -1,5 +1,5 @@
 import {Component, OnInit, SystemJsNgModuleLoader} from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../auth.service";
 import {Itinerario} from "../bos/Itinerario";
 import {DatePipe} from "@angular/common";
@@ -18,15 +18,43 @@ export class GeneraritinerarioComponent implements OnInit {
   itinerario: Itinerario = new Itinerario();
 
   public dataformGroup = this.formBuilder.group({
-      ubicacionNombre: [this.itinerario.ubicacionNombre, [Validators.required]],
-      nombre: [this.itinerario.nombre, [Validators.required]],
+      ubicacionNombre: [this.itinerario.ubicacionNombre, [Validators.required, Validators.minLength(3), Validators.maxLength(210)]],
+      nombre: [this.itinerario.nombre, [Validators.required, Validators.minLength(3), Validators.maxLength(210)]],
       radio: [this.itinerario.radio, [Validators.required]],
       precioTotal: [this.itinerario.precioTotal, [Validators.required]],
       hasCar: [this.itinerario.hasCar, []],
       timeStampFrom: [this.itinerario.timeStampFrom, [Validators.required]],
       timeStampTo: [this.itinerario.timeStampTo, [Validators.required]],
-    }
+    },
+    {validators: this.fromIsLessThanTo}
   );
+
+  fromIsLessThanTo(group: FormGroup){
+    let fromDate = new Date(group.get('timeStampFrom').value)
+    let toDate = new Date(group.get('timeStampTo').value)
+
+    let fromDateString = fromDate.getUTCDate().toString().padStart(2, "0")
+      + fromDate.getUTCMonth().toString().padStart(2, "0")
+      + fromDate.getFullYear()
+      + fromDate.getUTCHours().toString().padStart(2, "0")
+      + fromDate.getUTCMinutes().toString().padStart(2, "0") ;
+
+    let toDateString = toDate.getUTCDate().toString().padStart(2, "0")
+      + toDate.getUTCMonth().toString().padStart(2, "0")
+      + toDate.getFullYear()
+      + toDate.getUTCHours().toString().padStart(2, "0")
+      + toDate.getUTCMinutes().toString().padStart(2, "0");
+
+    console.log(group.get('timeStampFrom').value);
+    console.log(group.get('timeStampTo').value);
+
+    let areFromDateLessThanToDate = fromDateString < toDateString;
+    if(areFromDateLessThanToDate ||
+      (group.get('timeStampFrom').value === null && group.get('timeStampTo').value === null)){
+      return null;
+    }
+    return {areNotFromDateLessThanToDate: 'La primera fecha debe ser menor que la segunda'};
+  }
 
   constructor(public service: AuthService, public formBuilder: FormBuilder, private datePipe: DatePipe, public modalController: ModalController) {
   }
@@ -62,9 +90,9 @@ export class GeneraritinerarioComponent implements OnInit {
     this.itinerario.idUser = this.service.usuarioToLogIn.id;
     console.log(this.itinerario);
     this.service.itinerarioSelected = this.itinerario;
-    this.service.generateItinerarioData(this.itinerario, this);
-    this.generarViewItinerario(this.service.itinerarioSelected);
+    //this.service.generateItinerarioData(this.itinerario, this);
     this.dataformGroup.reset();
+    this.service.loading = true;
   }
 
   get currentDateWoTime(){

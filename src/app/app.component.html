@@ -4,7 +4,7 @@
       <ion-content>
         <ion-list id="inbox-list">
           <div *ngIf="(service.isLogged)">
-            <ion-list-header>{{service.usuarioToLogIn.nombre}}</ion-list-header>
+            <ion-list-header>{{service.usuarioToLogIn.nombre}}&nbsp;{{service.usuarioToLogIn.apellidos.substring(0,1)}}</ion-list-header>
             <ion-note>{{service.usuarioToLogIn.email}}</ion-note>
           </div>
           <ion-menu-toggle auto-hide="true" *ngFor="let p of appPages; let i = index">
