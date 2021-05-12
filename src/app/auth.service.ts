@@ -10,6 +10,7 @@ import {Observable} from "rxjs";
 import {Itinerario} from "./folder/bos/Itinerario";
 import {ItinerarioComponent} from "./itinerario/itinerario.component";
 import {GeneraritinerarioComponent} from "./folder/generaritinerario/generaritinerario.component";
+import {switchMap, tap} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -85,16 +86,16 @@ export class AuthService {
     return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/actividades?itinerarioId="+pItinerarioId, { headers: AuthService.initHeaders() , observe: 'response'});
   }
 
-  getItinerariosFromActivitiesFromItinerario(){
-    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/itinerario/listado?userId="+this.usuarioToLogIn.id, { headers: AuthService.initHeaders() , observe: 'response'});
+  getItinerariosFromActivitiesFromItinerario(asc:boolean){
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/itinerario/listado?userId="+this.usuarioToLogIn.id+'&asc='+asc, { headers: AuthService.initHeaders() , observe: 'response'});
   }
 
-  getFilteredItinerariosFromActivitiesFromItinerario(selectedTown: Town){
-    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/itinerario/listadobytown?userId="+this.usuarioToLogIn.id+'&townName='+selectedTown.name+'&townLat='+selectedTown.lat+'&townLon='+selectedTown.lon, { headers: AuthService.initHeaders() , observe: 'response'});
+  getFilteredItinerariosFromActivitiesFromItinerario(selectedTown: Town, asc:boolean){
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/user/itinerario/listadobytown?userId="+this.usuarioToLogIn.id+'&townName='+selectedTown.name+'&townLat='+selectedTown.lat+'&townLon='+selectedTown.lon+'&asc='+asc, { headers: AuthService.initHeaders() , observe: 'response'});
   }
 
-  getFilteredItinerarios(selectedTown: Town){
-    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/listado?townName="+selectedTown.name+'&townLat='+selectedTown.lat+'&townLon='+selectedTown.lon, { headers: AuthService.initHeaders() , observe: 'response'});
+  getFilteredItinerarios(selectedTown: Town, asc:boolean){
+    return this.http.get("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/listado?townName="+selectedTown.name+'&townLat='+selectedTown.lat+'&townLon='+selectedTown.lon+'&asc='+asc, { headers: AuthService.initHeaders() , observe: 'response'});
   }
 
   async saveDataRegisterService(pusuarioToLogIn: UserData){
@@ -191,18 +192,8 @@ export class AuthService {
     this.loading = true;
     let headers = AuthService.initHeaders();
     headers = headers.set('Authorization-Bearer', this.tokenAuth.token);
-    this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/generar", itinerario, { headers: headers, observe: 'response'})
-      .subscribe((res:HttpResponse<Itinerario>) => {
-        this.itinerarioSelected = res.body;
-        console.log(res.body);
-        generador.generarViewItinerario(this.itinerarioSelected);
-        this.loading = false;
-      }, error => {
-        this.loading = false;
-        console.log(error);
-        alert('No sé ha podido generar | ' + JSON.stringify(error) );
-      });
-    this.refreshToken();
+    return this.http.post("https://spendlessoutapi.herokuapp.com/server/api/v1/itinerario/generar", itinerario, { headers: headers, observe: 'response'})
+      .toPromise();
   }
 
 

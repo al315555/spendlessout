@@ -16,8 +16,6 @@ export class ItinerarioComponent implements OnInit {
 
     actividades: Actividad[] = [];
 
-    public DEMO_URL = 'https://www.eventbrite.es/e/entradas-abono-x-festival-early-music-morella-148337646895?aff=ebdssbdestsearch';
-
     constructor(public modalController: ModalController, public service: AuthService) {
     }
 

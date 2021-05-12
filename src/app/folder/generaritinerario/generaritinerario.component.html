@@ -128,7 +128,7 @@
         </ion-row>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col>
+          <ion-col *ngIf="!service.loading">
             <ion-button [formGroup]="dataformGroup"
                         [disabled]="!dataformGroup.valid" color="primary" type="submit">Generar itinerario
             </ion-button>
@@ -142,4 +142,3 @@
     </form>
   </ion-card-content>
 </ion-card>
-<ion-spinner *ngIf="service.loading" color="primary"></ion-spinner>

@@ -1,6 +1,13 @@
 <ion-toolbar>
   <ion-searchbar placeholder="Localidad (al menos 3 caractéres)..." type="text" debounce="500" showCancelButton="focus"
-                 (ionInput)="showTownItems($event)" color="primary" [value]="townSelectedName"></ion-searchbar>
+                 (ionInput)="showTownItems($event)" color="primary" [value]="townSelectedName">
+    <ion-button color="light" (click)="orderButtonClicked($event)" >
+      <ion-icon name="arrow-up" *ngIf="asc" style="color: dodgerblue;" ></ion-icon>
+      <ion-icon name="arrow-down" *ngIf="!asc" style="color: dodgerblue;" ></ion-icon>
+      <ion-icon name="logo-euro" style="color: dodgerblue;" ></ion-icon>
+    </ion-button>
+  </ion-searchbar>
+
 
   <ion-list style="border-color: #5d58e0; color: azure;" *ngIf="isItemAvailable">
     <ion-item *ngFor="let item of items" button (click)="selectionOfItemTown(item)" detail

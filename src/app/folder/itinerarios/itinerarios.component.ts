@@ -21,9 +21,25 @@ export class ItinerariosComponent implements OnInit {
 
   itinerarios: Itinerario[];
 
-  itinerarioSelected: Itinerario;
+  asc: boolean = true;
 
   constructor(public service: AuthService, public modalController: ModalController) {
+  }
+
+  orderButtonClicked($event){
+    this.asc = !this.asc;
+    this.service.loading = true;
+    if(this.itemTownSelected) {
+      this.isItemTownSelected = true;
+      this.itinerarios = [];
+      this.service.getFilteredItinerarios(this.itemTownSelected, this.asc).subscribe((res: HttpResponse<Array<Itinerario>>) => {
+        let arrayIti = res.body;
+        for (let iti of arrayIti) {
+          this.itinerarios.push(iti);
+        }
+        this.service.loading = false;
+      });
+    }
   }
 
   get townSelectedName() {
@@ -103,7 +119,7 @@ export class ItinerariosComponent implements OnInit {
       if(this.itemTownSelected){
         this.isItemTownSelected = true;
         this.itinerarios = [];
-        this.service.getFilteredItinerarios(this.itemTownSelected).subscribe((res:HttpResponse<Array<Itinerario>>) => {
+        this.service.getFilteredItinerarios(this.itemTownSelected, this.asc).subscribe((res:HttpResponse<Array<Itinerario>>) => {
           let arrayIti = res.body;
           for (let iti of arrayIti) {
             this.itinerarios.push(iti);

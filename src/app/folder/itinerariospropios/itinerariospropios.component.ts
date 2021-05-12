@@ -22,6 +22,8 @@ export class ItinerariospropiosComponent implements OnInit {
 
   itinerarios: Itinerario[];
 
+  asc: boolean = true;
+
   constructor(public service: AuthService, public modalController: ModalController) {
   }
 
@@ -32,7 +34,7 @@ export class ItinerariospropiosComponent implements OnInit {
   ngOnInit() {
     this.itinerarios = [];
 
-    this.service.getItinerariosFromActivitiesFromItinerario().subscribe((res:HttpResponse<Array<Itinerario>>) => {
+    this.service.getItinerariosFromActivitiesFromItinerario(this.asc).subscribe((res:HttpResponse<Array<Itinerario>>) => {
       let arrayIti = res.body;
       for (let iti of arrayIti) {
         this.itinerarios.push(iti);
@@ -43,30 +45,29 @@ export class ItinerariospropiosComponent implements OnInit {
 
   }
 
-  images = [
-    'bandit',
-    'batmobile',
-    'blues-brothers',
-    'bueller',
-    'delorean',
-    'eleanor',
-    'general-lee',
-    'ghostbusters',
-    'knight-rider',
-    'mirth-mobile'
-  ];
-
-  rotateImg = 0;
-  get imgSrc() {
-    const src = 'https://dummyimage.com/600x400/${Math.round( Math.random() * 99999)}/fff.png';
-    this.rotateImg++;
-    if (this.rotateImg === this.images.length) {
-      this.rotateImg = 0;
+  orderButtonClicked($event){
+    this.asc = !this.asc;
+    this.service.loading = true;
+    if(this.isItemTownSelected) {
+      this.itinerarios = [];
+      this.service.getFilteredItinerariosFromActivitiesFromItinerario(this.itemTownSelected, this.asc).subscribe((res: HttpResponse<Array<Itinerario>>) => {
+        let arrayIti = res.body;
+        for (let iti of arrayIti) {
+          this.itinerarios.push(iti);
+        }
+        this.service.loading = false;
+      });
+    }else{
+      this.itinerarios = [];
+      this.service.getItinerariosFromActivitiesFromItinerario(this.asc).subscribe((res:HttpResponse<Array<Itinerario>>) => {
+        let arrayIti = res.body;
+        for (let iti of arrayIti) {
+          this.itinerarios.push(iti);
+        }
+        this.service.loading = false;
+      });
     }
-    return src;
   }
-
-
 
   showTownItems(ev: any) {
     this.service.loading = true;
@@ -115,7 +116,7 @@ export class ItinerariospropiosComponent implements OnInit {
       if(this.itemTownSelected){
         this.isItemTownSelected = true;
         this.itinerarios = [];
-        this.service.getFilteredItinerariosFromActivitiesFromItinerario(this.itemTownSelected).subscribe((res:HttpResponse<Array<Itinerario>>) => {
+        this.service.getFilteredItinerariosFromActivitiesFromItinerario(this.itemTownSelected, this.asc).subscribe((res:HttpResponse<Array<Itinerario>>) => {
           let arrayIti = res.body;
           for (let iti of arrayIti) {
             this.itinerarios.push(iti);

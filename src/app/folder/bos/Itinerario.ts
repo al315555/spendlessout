@@ -11,4 +11,5 @@ export class Itinerario extends Object{
   ubicacionLon: number;
   hasCar: boolean;
   idUser: number;
+  generationEnded:boolean;
 }

@@ -9,8 +9,7 @@
       <ion-title>Itinerario</ion-title>
     </ion-toolbar>
   </ion-header>
-  <br>
-  <ion-content [fullscreen]="true" *ngIf="!service.loading">
+  <ion-content [fullscreen]="true" >
     <div style="margin-left: 5%;color: dodgerblue;">
       <h2
         style="font-weight: bold;"> {{service.itinerarioSelected && service.itinerarioSelected.nombre && service.itinerarioSelected.nombre.length > 1 ? service.itinerarioSelected.nombre.substring(0, 1).toUpperCase() + service.itinerarioSelected.nombre.substring(1).toLowerCase() : ''}}</h2>
@@ -68,6 +67,5 @@
       <p>Creado {{formatDate(service.itinerarioSelected.timeStampCreacion)}}</p>
     </div>
   </ion-content>
-  <ion-spinner *ngIf="service.loading" color="primary"></ion-spinner>
 </div>
 

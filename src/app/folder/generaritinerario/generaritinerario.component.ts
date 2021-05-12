@@ -6,6 +6,7 @@ import {DatePipe} from "@angular/common";
 import {Town} from "../bos/Town";
 import {ItinerarioComponent} from "../../itinerario/itinerario.component";
 import {ModalController} from "@ionic/angular";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-generaritinerario',
@@ -69,6 +70,7 @@ export class GeneraritinerarioComponent implements OnInit {
   }
 
   async generarViewItinerario(itinerario: Itinerario){
+    this.dataformGroup.reset();
     this.itinerario = itinerario;
     const modal = await this.modalController.create({
       component: ItinerarioComponent,
@@ -78,7 +80,6 @@ export class GeneraritinerarioComponent implements OnInit {
   }
 
   generateFormSubmit() {
-    this.service.loading = true;
     this.itinerario.id = 0;
     this.itinerario.nombre = this.dataformGroup.value.nombre;
     this.itinerario.timeStampTo = new Date(this.dataformGroup.value.timeStampTo).getTime();
@@ -88,11 +89,18 @@ export class GeneraritinerarioComponent implements OnInit {
     this.itinerario.precioTotal = this.dataformGroup.value.precioTotal;
     this.itinerario.timeStampCreacion = Date.now();
     this.itinerario.idUser = this.service.usuarioToLogIn.id;
-    console.log(this.itinerario);
+    this.itinerario.generationEnded = false;
+    console.log(this.itinerario.generationEnded);
     this.service.itinerarioSelected = this.itinerario;
-    //this.service.generateItinerarioData(this.itinerario, this);
-    this.dataformGroup.reset();
-    this.service.loading = true;
+    this.service.generateItinerarioData(this.itinerario, this).then((res:HttpResponse<Itinerario>) => {
+      this.service.itinerarioSelected = res.body
+      this.service.refreshToken();
+    }).catch(error => {
+      this.service.loading = false;
+      console.log(error);
+      alert('Está tardando demasiado, por favor espera unos minutos y podrás encontrarlo en itinerarios propios. Si no aparece, inténtalo de nuevo más adelante. Disculpa las molestias.' );
+    })
+
   }
 
   get currentDateWoTime(){
