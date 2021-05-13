@@ -1,4 +1,4 @@
-import {Component, OnInit, SystemJsNgModuleLoader} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../auth.service";
 import {Itinerario} from "../bos/Itinerario";
@@ -94,6 +94,7 @@ export class GeneraritinerarioComponent implements OnInit {
     this.service.itinerarioSelected = this.itinerario;
     this.service.generateItinerarioData(this.itinerario, this).then((res:HttpResponse<Itinerario>) => {
       this.service.itinerarioSelected = res.body
+      this.generarViewItinerario(this.service.itinerarioSelected);
       this.service.refreshToken();
     }).catch(error => {
       this.service.loading = false;
