@@ -16,7 +16,7 @@ export class AppComponent {
     { displayOnLogout: true,  displayOnLogin: false, title: 'Registrarse', url: '/folder/register', icon: 'person-add' }
   ];
 
-  public titlestr = "Ocio por lo justo - spendlessout ©2021";
+  public titlestr = "1.0 Ocio por lo justo - spendlessout ©2021";
 
   constructor(private service: AuthService) {}
 }
