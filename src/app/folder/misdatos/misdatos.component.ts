@@ -16,8 +16,8 @@ export class MisdatosComponent implements OnInit {
   public regexForPassword = '((?=.*[0-9])|(?=.*[^a-zA-Z0-9_]+))(?=.*[A-Z])(?=.*[a-z]).*$';
 
   public dataformGroup = this.formBuilder.group({
-      nombre: [this.service.usuarioToLogIn.nombre,[Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-      apellidos: [this.service.usuarioToLogIn.apellidos,[Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+      nombre: [this.service.usuarioToLogIn.nombre,[Validators.required, Validators.minLength(1), Validators.maxLength(25)]],
+      apellidos: [this.service.usuarioToLogIn.apellidos,[Validators.required, Validators.minLength(1), Validators.maxLength(60)]],
       }
   );
 

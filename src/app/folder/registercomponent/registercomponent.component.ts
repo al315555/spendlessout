@@ -15,9 +15,9 @@ export class RegistercomponentComponent implements OnInit {
   public usuarioCreatedToLogIn = new UserData();
 
   public registerformGroup = this.formBuilder.group({
-      email: [this.usuarioCreatedToLogIn.email,[Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.email]],
-      nombre: [this.usuarioCreatedToLogIn.nombre,[Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-      apellidos: [this.usuarioCreatedToLogIn.apellidos,[Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+      email: [this.usuarioCreatedToLogIn.email,[Validators.required, Validators.minLength(1), Validators.maxLength(120), Validators.email]],
+      nombre: [this.usuarioCreatedToLogIn.nombre,[Validators.required, Validators.minLength(1), Validators.maxLength(25)]],
+      apellidos: [this.usuarioCreatedToLogIn.apellidos,[Validators.required, Validators.minLength(1), Validators.maxLength(60)]],
       password: [this.usuarioCreatedToLogIn.password,[Validators.required,Validators.minLength(6), Validators.maxLength(16), Validators.pattern(this.regexForPassword)]],
       passwordConfirmation: [this.usuarioCreatedToLogIn.passwordConfirmation,[Validators.required, Validators.minLength(6), Validators.maxLength(16), Validators.pattern(this.regexForPassword)]]
     },

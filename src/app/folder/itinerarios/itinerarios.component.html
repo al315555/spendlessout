@@ -1,4 +1,4 @@
-<ion-toolbar>
+<ion-toolbar class="bar bar-subheader item-input-inset" no-tap-scroll="true">
   <ion-searchbar placeholder="Localidad (al menos 3 caractéres)..." type="text" debounce="500" showCancelButton="focus"
                  (ionInput)="showTownItems($event)" color="primary" [value]="townSelectedName">
     <ion-button color="light" (click)="orderButtonClicked($event)" *ngIf="isItemTownSelected">
@@ -15,7 +15,7 @@
     </ion-item>
   </ion-list>
 </ion-toolbar>
-<div>
+<ion-content has-header="true" has-tabs="true" class="">
   <ion-list *ngIf="itinerarios.length > 0">
     <ion-item *ngFor="let itiner of itinerarios; let i = index">
       <ion-card button style="margin-left: 15%;" (click)="presentItinerarioModal(i);"
@@ -50,4 +50,4 @@
     <ion-icon name="list-outline" color="dodgerblue"></ion-icon>
   </i>&nbsp;Es necesario filtrar por población.
   </ion-label>
-</div>
+</ion-content>
